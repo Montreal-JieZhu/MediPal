@@ -1,6 +1,6 @@
 # MediPal: Your AI Friend for Medicine Q&A
 
-MediPal is an open-source medical chatbot that provides comprehensive drug information and symptom-based recommendations using natural-language understanding.
+MediPal is an open-source medical chatbot that provides comprehensive drug information and symptom-based recommendations using natural-language understanding. It is powered by LLM, Agentic RAG and many more. 
 
 ---
 
@@ -32,9 +32,9 @@ While using online pharmacies, I noticed several gaps in the customer experience
 3. I talked with a few pharmacy chatbots, but their answers were vague and unhelpful far from the intelligent guidance people need.
 
 > Example:  
-![Sample Screenshot](screenshots/problem1.png "")
-![Sample Screenshot](screenshots/problem2.png "")
-![Sample Screenshot](screenshots/problem4.png "")
+![](./screenshots/problem1.png "")
+![](./screenshots/problem2.png "")
+![](./screenshots/problem4.PNG "")
 
 ---
 
