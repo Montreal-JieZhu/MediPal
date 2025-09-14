@@ -1,2 +1,9 @@
 langid
 matplotlib
+langchain
+langchain-huggingface
+jupyter
+ipywidgets
+torch
+transformers
+accelerate

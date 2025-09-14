@@ -33,7 +33,9 @@ While using online pharmacies, I noticed several gaps in the customer experience
 
 > Example:  
 ![](./screenshots/problem1.png "")
-![](./screenshots/problem2.png "")
+
+------------------------------------------------------------------------------------------
+
 ![](./screenshots/problem4.PNG "")
 
 ---
