@@ -1,3 +1,8 @@
+# My json file
+
+data-pipeline/datasets/*.json
+Agentic-RAG/datasets/*.json
+
 # My keys
 
 data-pipeline/keys.txt
