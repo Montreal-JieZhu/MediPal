@@ -8,3 +8,5 @@ torch
 transformers
 accelerate
 langchain_chroma
+langchain_community
+sentence-transformers
