@@ -1,0 +1,2 @@
+SESSION_ID = ""
+SHORT_TERM_MEMORY = None

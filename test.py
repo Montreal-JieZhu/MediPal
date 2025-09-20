@@ -1,14 +1,21 @@
-import subprocess
+from langgraph_sdk import get_client
+import asyncio
 
-cmd = [
-    "curl",
-    "-s",  # silent
-    "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "-H", "Accept-Language: en-US,en;q=0.9",
-    "-H", "Referer: https://medlineplus.gov/",
-    "https://medlineplus.gov/druginfo/drug_Ga.html"
-]
-html = subprocess.check_output(cmd, text=True)
-print(html[:5000])  # preview
+client = get_client(url="http://localhost:2024")
+
+async def main():
+    async for chunk in client.runs.stream(
+        None,  # Threadless run
+        "14b621eb-c5d6-41b5-81fa-44808f3bbd48", # Name of assistant. Defined in langgraph.json.
+        input={
+        "messages": [{
+            "role": "human",
+            "content": "What is LangGraph?",
+            }],
+        },
+    ):
+        print(f"Receiving new event of type: {chunk.event}...")
+        print(chunk.data)
+        print("\n\n")
+
+asyncio.run(main())
