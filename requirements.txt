@@ -12,3 +12,5 @@ langchain_community
 sentence-transformers
 langgraph-cli[inmem]
 langgraph-sdk
+wikipedia
+streamlit
