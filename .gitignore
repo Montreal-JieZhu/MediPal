@@ -3,11 +3,6 @@
 data-pipeline/datasets/*.json
 Agentic-RAG/datasets/*.json
 
-# My keys
-
-data-pipeline/keys.txt
-Agentic-RAG/keys.txt
-
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

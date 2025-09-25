@@ -9,9 +9,9 @@ from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import CrossEncoder
 
-class BasicRAG():
+class Rerank_RAG():
     """
-        BasicRAG class defines everything the RAG needs.
+        Rerank_RAG class defines everything the RAG needs.
             Attributes:
                 workspace_base_path: The current workspace.
                 dataset_path: The path to the medicine dataset.                
@@ -100,10 +100,10 @@ class BasicRAG():
         #Rerank part
         return retrieved_docs[ :top_k]
     
-__all__ = ["BasicRAG"]
+__all__ = ["Rerank_RAG"]
 
 
 if __name__ == "__main__":
-    rag = BasicRAG()
+    rag = Rerank_RAG()
     rag.build_medicine_retriever()
     print(rag.retrieve("My nasal is disconfort. Do you have a medicine to relieve sinus congestion and pressure?",top_k=2))
