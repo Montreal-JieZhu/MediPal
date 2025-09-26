@@ -1,8 +1,6 @@
 # My json file
-
-data-pipeline/datasets/*.json
-Agentic-RAG/datasets/*.json
-
+Agentic-RAG/datasets/
+data-pipeline/datasets/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -9,6 +9,8 @@ from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import CrossEncoder
 
+# Wrap them up
+
 class Rerank_RAG():
     """
         Rerank_RAG class defines everything the RAG needs.
@@ -32,8 +34,11 @@ class Rerank_RAG():
 
         self.workspace_base_path = os.getcwd()
         self.dataset_path = os.path.join(self.workspace_base_path, "datasets", "medicine_data_hypotheticalquestions.json")  
+        self.chunked_dataset_path = os.path.join(self.workspace_base_path, "datasets", "chunked_medicine_data.json")  
+        self.vector_persist_directory = os.path.join(self.workspace_base_path, "datasets", "vectordb")
         self.embedding_model_id = "sentence-transformers/embeddinggemma-300m-medical"
         self.cross_encoder_model_id = "ncbi/MedCPT-Cross-Encoder" 
+        self.vectorstore = None
         self.embedding_model = None
         self.retriever = None
         self.cross_encoder = None
@@ -42,34 +47,38 @@ class Rerank_RAG():
     def load_embedding_model(self):        
         self.embedding_model = HuggingFaceEmbeddings(
             model_name=self.embedding_model_id,
-            model_kwargs = {'device': 'cpu'},
+            model_kwargs = {'device': 'cpu'},            
             # Normalizing helps cosine similarity behave better across models
             encode_kwargs={"normalize_embeddings": True},
-        )        
-
+        )      
+    
     @timed
     def load_crossencoder(self):
         self.cross_encoder = CrossEncoder(self.cross_encoder_model_id)
 
-    @timed
-    def load_json_list(self):    
+    def load_hypethetical_data(self):    
         with open(self.dataset_path, mode = "r", encoding="utf-8") as f:
             return json.load(f)
         
-    @timed    
+    def load_chunked_data(self):    
+        with open(self.chunked_dataset_path, mode = "r", encoding="utf-8") as f:
+            return json.load(f)      
+        
     def build_medicine_retriever(self):        
-        data = self.load_json_list()  
-        login_huggingface()      
-        self.load_embedding_model()
-        self.load_crossencoder()
+        hypethetical_data = self.load_hypethetical_data()  
+        chunked_data = self.load_chunked_data()          
         docstore = InMemoryStore()
         id_key = "doc_id"
 
         # The vectorstore to use to index the questions
-        vectorstore = Chroma(collection_name = "medicine_data", embedding_function = self.embedding_model)
+        self.vectorstore = Chroma(
+            collection_name = "medicine_data", 
+            embedding_function = self.embedding_model,
+            persist_directory=self.vector_persist_directory
+        )
         # The Multi-Vector retriever
         self.retriever = MultiVectorRetriever(
-            vectorstore=vectorstore,
+            vectorstore=self.vectorstore,
             docstore=docstore,
             id_key=id_key,
         )
@@ -77,15 +86,57 @@ class Rerank_RAG():
         doc_ids = list()
         questions = list()
         docs = list()
-        for d in data[:50]:
+        for d in hypethetical_data[:10]:
             doc_id = d["doc_id"]
             doc_ids.append(doc_id)
             docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))
             for q in d["questions"]:
                 questions.append(Document(metadata={"doc_id": doc_id}, page_content=q))
 
+        for d in chunked_data[:10]: 
+            doc_id = d["doc_id"]        
+            for q in d["docs"]:
+                questions.append(Document(metadata={"doc_id": doc_id}, page_content=q))
+
         self.retriever.vectorstore.add_documents(questions)
+        self.retriever.docstore.mset(list(zip(doc_ids,docs)))  
+        
+    def load_existing_retriever(self):
+        hypethetical_data = self.load_hypethetical_data()
+        docstore = InMemoryStore()
+        id_key = "doc_id"
+        # The vectorstore to use to index the questions
+        self.vectorstore = Chroma(
+            collection_name = "medicine_data", 
+            embedding_function = self.embedding_model,
+            persist_directory=self.vector_persist_directory
+        )
+        # The Multi-Vector retriever
+        self.retriever = MultiVectorRetriever(
+            vectorstore=self.vectorstore,
+            docstore=docstore,
+            id_key=id_key,
+        )
+
+        doc_ids = list()        
+        docs = list()
+        for d in hypethetical_data[:10]:
+            doc_id = d["doc_id"]
+            doc_ids.append(doc_id)
+            docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))
+            
         self.retriever.docstore.mset(list(zip(doc_ids,docs)))
+
+    @timed       
+    def setup_retriever(self):
+        login_huggingface()      
+        self.load_embedding_model()
+        self.load_crossencoder()
+
+        if os.path.isdir(self.vector_persist_directory) and os.listdir(self.vector_persist_directory):
+            self.load_existing_retriever()
+        else:
+            self.build_medicine_retriever()
 
     @timed
     def retrieve(self, query: str, top_k: int=5):
@@ -105,5 +156,5 @@ __all__ = ["Rerank_RAG"]
 
 if __name__ == "__main__":
     rag = Rerank_RAG()
-    rag.build_medicine_retriever()
+    rag.setup_retriever()
     print(rag.retrieve("My nasal is disconfort. Do you have a medicine to relieve sinus congestion and pressure?",top_k=2))
