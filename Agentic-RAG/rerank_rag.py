@@ -138,7 +138,6 @@ class Rerank_RAG():
         else:
             self.build_medicine_retriever()
 
-    @timed
     def retrieve(self, query: str, top_k: int=5):
         retrieved_docs = self.retriever.invoke(query, kwargs={"k":10})
         retrieved_docs = copy.deepcopy(retrieved_docs) # Avoid rerank changes original documents

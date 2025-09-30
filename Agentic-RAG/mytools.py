@@ -13,7 +13,7 @@ log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)
 
 # Full path to log file
-log_file = os.path.join(log_dir, "app.log")
+log_file = os.path.join(log_dir, "medipal.log")
 # Configure logging
 # Create a handler that rotates logs daily
 handler = TimedRotatingFileHandler(
@@ -32,7 +32,10 @@ handler.suffix = "%Y-%m-%d"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[handler, logging.StreamHandler()]
+    handlers=[
+        handler, 
+        #logging.StreamHandler() # it will print it out with streamhandler
+    ]
 )
 
 def timed(func):
@@ -77,7 +80,7 @@ def draw_langgraph(app: CompiledStateGraph, inline: bool = True):
         with open("langgraph_diagram.png", "wb") as f:
             f.write(png_bytes)
 
-def logging_print(log: str, print_out: bool = True):
+def logging_print(log: str, print_out: bool = False):
     """If print_out is True, print content out and logging
        If it is False, only logging
     """
