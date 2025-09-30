@@ -1,11 +1,39 @@
 import time
 import torch
 import os
-from typing import Any
+import logging
+from logging.handlers import TimedRotatingFileHandler
 from dotenv import load_dotenv
 from huggingface_hub import login
 from IPython.display import Image, display
 from langgraph.graph.state import CompiledStateGraph
+
+# Make sure log folder exists
+log_dir = "logs"
+os.makedirs(log_dir, exist_ok=True)
+
+# Full path to log file
+log_file = os.path.join(log_dir, "app.log")
+# Configure logging
+# Create a handler that rotates logs daily
+handler = TimedRotatingFileHandler(
+    log_file,
+    when="midnight",
+    interval=1,
+    backupCount=7,
+    encoding="utf-8"
+)
+
+# Optional: add timestamp to rotated files automatically
+# Output files: app.log, app.log.2025-09-30, app.log.2025-10-01, etc.
+handler.suffix = "%Y-%m-%d"
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[handler, logging.StreamHandler()]
+)
 
 def timed(func):
     """Decorator that prints the runtime of any function it wraps."""
@@ -49,5 +77,13 @@ def draw_langgraph(app: CompiledStateGraph, inline: bool = True):
         with open("langgraph_diagram.png", "wb") as f:
             f.write(png_bytes)
 
+def logging_print(log: str, print_out: bool = True):
+    """If print_out is True, print content out and logging
+       If it is False, only logging
+    """
+    logging.info(log)
+    if print_out:
+        print(log)     
 
-__all__ = ["timed", "best_dtype", "best_device", "draw_langgraph"]
+
+__all__ = ["timed", "best_dtype", "best_device", "draw_langgraph", "logging_print"]

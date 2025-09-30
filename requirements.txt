@@ -14,3 +14,7 @@ langgraph-cli[inmem]
 langgraph-sdk
 wikipedia
 streamlit
+ragas
+uvicorn
+fastapi
+gradio
