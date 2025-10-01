@@ -18,3 +18,5 @@ ragas
 uvicorn
 fastapi
 gradio
+gtts
+faster_whisper

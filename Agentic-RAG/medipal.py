@@ -1,0 +1,295 @@
+import settings
+from mytools import logging_print
+from agentic_rag import rag_invoke, robust_binary_grader, AgentState, master_llm
+import random
+from langchain.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langgraph.graph import StateGraph, START, END
+
+#Action node
+def answer_generater(state: AgentState) -> AgentState:
+    """ 
+    Generate answer based on the retrieval documents.
+    """
+    query = state["query"]
+    document = state["retrieved_doc"]
+    logging_print(f"===Step {settings.STEP}===\n")    
+    logging_print(f"Master_Agent: I am generating the answer based on the retrieved docs.\n")   
+    prompt = PromptTemplate(
+        template="""You are an assistant that answers questions **only** using the retrieved documents.
+        ## Instructions
+        - Read the provided documents carefully.
+        - Answer the user query **strictly grounded in the documents**.  
+        - If the documents do not contain enough information, reply with:
+        "I'm sorry, the provided documents do not contain enough information to answer this question."
+        - Do NOT add any outside knowledge or assumptions.
+        ## Inputs
+        Retrieved Documents:
+        {document}
+        User Query:
+        {question}
+        ## Output
+        Provide a concise, plain-English answer based solely on the retrieved documents.
+        """,
+        input_variables=["document", "question"],
+    )
+    chain = prompt | master_llm | StrOutputParser()   
+    raw = chain.invoke({"question": query, "document": document})
+    logging_print(f"Real output: {raw}\n")        
+    state["generation"] = str(raw)
+    state["regenerate_counter"] += 1
+    settings.STEP += 1
+    return state 
+
+#Action Node
+def grade_greeting_query(state: AgentState) -> AgentState:
+    """
+    Determine whether a query is pure greeting.
+    without relying on prior conversation context.
+    """   
+    query = state["query"]
+    logging_print(f"===Step {settings.STEP}===\n")
+    logging_print(f"""Master_Agent: Got a new query: "{query}"\nI will check if the query is pure greeting.\n""")     
+   
+    prompt = PromptTemplate(
+        template="""
+    You are a classifier that checks if a message is a **pure greeting**.
+
+    Definition of pure greeting:
+    - A short message whose sole purpose is to greet or say hello.
+    - It may include polite questions or phrases like “How are you?”, “What’s up?”, 
+    “Good to meet you”, “Nice to see you”, “How’s it going?”, etc.
+    - It must NOT contain any request for information, task instructions, or other content.
+
+    Your task:
+    Given the user's input below, decide if it is a pure greeting.
+
+    User input: {question}
+
+    Return only a JSON object with a single key "score":
+    - Output {{"score": "yes"}} if it is a pure greeting (even if it looks like a casual question such as “What’s up?”).
+    - Output {{"score": "no"}} if it contains anything beyond a greeting.
+
+    Do not add explanation or extra text.
+    """,
+        input_variables=["question"],
+    )
+
+
+    state["grade"] = robust_binary_grader(prompt=prompt, question=query)
+    settings.STEP += 1
+    return state
+
+#Decision Node
+def decide_greeting_query(state: AgentState) -> str:
+    """ 
+    If it's a greeting query, go to grader node for clinical checking.
+    If it's not a greeting query, go to grader node for self-contained checking. 
+    """
+    if state['grade']["score"] == "yes":
+        logging_print(f"Master_Agent: The query is just greeting. Greeting back.\n")
+        return "greeting"
+    else:
+        logging_print(f"Master_Agent: The query is not greeting. Let's call RAG.\n")
+        return "call_rag"
+    
+#Action Node
+def greeting_back(state: AgentState) -> AgentState:
+    """
+    Greeting back    
+    """
+    query = state["query"]
+
+    logging_print(f"===Step {settings.STEP}===\n")    
+    logging_print(f"Master_Agent: I am greeting.\n")  
+
+    greetings = [
+        "Hey, how’s it going?",
+        "What’s up?",
+        "Good to see you!",
+        "How have you been?",
+        "Hi there!"
+    ]    
+
+    state["generation"] = random.choice(greetings)       
+    settings.STEP = 1
+    return state
+
+#Action Node
+def rag_calling(state: AgentState) -> AgentState:
+    """
+    Call Agentic RAG to retrieve relevant documents.   
+    """   
+    logging_print(f"===Step {settings.STEP}===\n")  
+    logging_print(f"Master_Agent: I am calling RAG.\n") 
+    state = rag_invoke(state)
+    #logging_print(state)
+    state["generation"] = state["retrieved_doc"] 
+    settings.STEP += 1
+    return state
+
+#Decision Node
+def decide_retrieve_success(state: AgentState) -> str:
+    """ 
+    If rag retrieved relevant docs, go to generate answer.
+    If there is no retrieval docs, save to memory 
+    """
+    if state['grade']["score"] == "yes":
+        logging_print(f"Master_Agent: Let's generate the answer.\n")
+        return "answer_generater"
+    else:
+        logging_print(f"Master_Agent: There is no relevant docs from RAG.\n")          
+        settings.STEP = 1 #reset step     
+        return "end"
+    
+#Action Node
+def grade_hallucination(state: AgentState) -> AgentState:
+    """
+    Determine whether the answer llm generated has hallucination.    
+    """
+    generation = state["generation"]    
+    retrieval_doc = state["retrieved_doc"]
+
+    logging_print(f"===Step {settings.STEP}===\n")  
+    logging_print(f"Master_Agent: I am checking if the answer has hallucination.\n")
+    prompt = PromptTemplate(
+        template="""
+    You are a classifier that checks if an **answer is fully supported by the provided document**.
+
+    Definition of “fully supported”:
+    - Every factual statement in the answer can be directly verified in the given document.
+    - The answer contains **no hallucination**, speculation, or information that is absent from the document.
+    - Minor rephrasing or summarizing of the document is acceptable as long as it remains faithful.
+
+    Your task:
+    Given the document and the answer below, decide if the answer is completely grounded in the document.
+
+    Document:
+    {document}
+
+    Answer:
+    {answer}
+
+    Return only a JSON object with a single key "score":
+    - Output {{"score": "yes"}} if the answer is fully supported by the document with no hallucination.
+    - Output {{"score": "no"}} if any part of the answer is not supported by the document.
+
+    Do not add explanation or extra text.
+    """,
+        input_variables=["document", "answer"],
+    )
+    state["grade"] = robust_binary_grader(prompt=prompt, answer=generation, document=retrieval_doc)
+    settings.STEP += 1
+    return state
+
+#Decision Node
+def decide_hallucination(state: AgentState) -> str:
+    """ 
+    If the answer has hallucination, re-generate the answer.
+    If it ground the retrieval document, save to memory 
+    """
+    if state['grade']["score"] == "yes":
+        logging_print(f"Master_Agent: The answer is good now.\n")
+        return "save_node"
+    elif state["regenerate_counter"] <= 3:
+        logging_print(f"Master_Agent: The answer has hallucination. I will generate another one.\n")
+        return "answer_generater"
+    else:
+        settings.STEP = 1 #reset step  
+        return "end"    
+    
+#Action Node
+def save_to_memory(state: AgentState) -> AgentState:
+    """ 
+    Before End, save user's query and final answer to memory 
+    """   
+    logging_print(f"===Step {settings.STEP}===\n")
+    logging_print("Master_Agent: I am saving the user query and answer to memory.\n")      
+
+    settings.SHORT_TERM_MEMORY.add_message(session_id=state["session_id"], message=state["query"], msg_type="human")
+    settings.SHORT_TERM_MEMORY.add_message(session_id=state["session_id"], message=state["generation"], msg_type="ai")
+    settings.STEP = 1 # Reset the STEP 
+    return state  
+
+
+medipal_graph = StateGraph(AgentState)
+# Nodes
+medipal_graph.add_node("grade_greeting_node", grade_greeting_query)
+
+medipal_graph.add_node("greeting_node", greeting_back)
+
+medipal_graph.add_node("call_rag_node", rag_calling)
+
+medipal_graph.add_node("generate_answer_node", answer_generater)
+
+medipal_graph.add_node("grade_hallucination_node", grade_hallucination)
+
+medipal_graph.add_node("decide_hallucination", lambda state: state)
+
+medipal_graph.add_node("save_node", save_to_memory)
+
+#Edges
+medipal_graph.add_edge(START, "grade_greeting_node")
+
+medipal_graph.add_conditional_edges(
+    source="grade_greeting_node",
+    path=decide_greeting_query,
+    path_map={
+        "greeting": "greeting_node",
+        "call_rag": "call_rag_node"
+    }
+)
+
+medipal_graph.add_edge("greeting_node", END)
+
+medipal_graph.add_conditional_edges(
+    source="call_rag_node",
+    path=decide_retrieve_success,
+    path_map={
+        "answer_generater": "generate_answer_node",
+        "end": END
+    }
+)
+
+medipal_graph.add_edge("generate_answer_node", "grade_hallucination_node")
+
+medipal_graph.add_edge("grade_hallucination_node", "decide_hallucination")
+
+medipal_graph.add_conditional_edges(
+    source="decide_hallucination",
+    path=decide_hallucination,
+    path_map={
+        "save_node": "save_node",
+        "answer_generater": "generate_answer_node",
+        "end": END
+    }
+)
+
+medipal_graph.add_edge("save_node", END)
+
+medipal_app = medipal_graph.compile()
+
+def ask(query: str) -> str:
+    state = AgentState(query=query, session_id=1,wiki_used=False,brave_used=False,rewrite_counter=0,regenerate_counter=0)
+    result = medipal_app.invoke(state)
+    logging_print(f"result:{result}")
+    return result["generation"]
+
+__all__ = ["ask"]
+
+if __name__ == "__main__":
+    questions = [    
+    "Is there anything I can assist you with?",    
+    "Can I help you in any way, next?",
+    "Do you have any questions?",  
+    "Are you looking for any particular information?",
+    "I am a Medicine Agentic RAG. I can help you get medical and clinical documents. Just tell me what you need?"
+    ]
+
+    while True:
+        user_input = input(random.choice(questions))
+        if user_input.strip().lower() in ["end", "exit"]:
+            break
+        query = AgentState(query=user_input, session_id=1,wiki_used=False,brave_used=False,rewrite_counter=0,regenerate_counter=0)
+        result = medipal_app.invoke(query)
+        logging_print(f"result:{result}")

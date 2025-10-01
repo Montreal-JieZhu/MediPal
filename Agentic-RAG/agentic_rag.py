@@ -458,9 +458,7 @@ def save_to_memory(state: AgentState) -> AgentState:
     Before End, save user's query and final answer to memory 
     """   
     logging_print(f"===Step {settings.STEP}===\n")
-    logging_print("Master_Agent: I am saving the user query and RAG docs to memory.\n")  
-    logging_print(f"""User query: {state["query"]} - RAG documents: {state["retrieved_doc"]}""") 
-    #history = settings.SHORT_TERM_MEMORY.get_history(state["session_id"])
+    logging_print("Master_Agent: I am saving the user query and retrieved docs to memory.\n")      
 
     settings.SHORT_TERM_MEMORY.add_message(session_id=state["session_id"], message=state["query"], msg_type="human")
     settings.SHORT_TERM_MEMORY.add_message(session_id=state["session_id"], message=state["retrieved_doc"], msg_type="ai")
