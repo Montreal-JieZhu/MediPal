@@ -11,9 +11,9 @@ from sentence_transformers import CrossEncoder
 
 # Wrap them up
 
-class Rerank_RAG():
+class Rerank_Retriever():
     """
-        Rerank_RAG class defines everything the RAG needs.
+        Rerank_Retriever class definition:
             Attributes:
                 workspace_base_path: The current workspace.
                 dataset_path: The path to the medicine dataset.                
@@ -25,7 +25,7 @@ class Rerank_RAG():
             Functions:
                 load_json_list: Load json file to json objects.
                 login_huggingface: Login huggingface to gain the access to the LLMs
-                build_medicine_retriever: Build a multi-vector db which contains vectorstore and docstore. Embedding hypothetical questions to vectorstore and Storing original documents to docstore.
+                build_medicine_retriever: Build a multi-vector db which contains vectorstore and docstore. Embedding generated questions to vectorstore and Storing original documents to docstore.
                 load_embedding_model: Load embedding model.
                 load_crossencoder: Load cross encoder model.
                 retrieve: Wrap retriever and reranker up to fetch top_k relevant documents.
@@ -33,7 +33,7 @@ class Rerank_RAG():
     def __init__(self) -> None:
 
         self.workspace_base_path = os.getcwd()
-        self.dataset_path = os.path.join(self.workspace_base_path, "datasets", "medicine_data_hypotheticalquestions.json")  
+        self.dataset_path = os.path.join(self.workspace_base_path, "datasets", "medicine_data_questions.json")  
         self.chunked_dataset_path = os.path.join(self.workspace_base_path, "datasets", "chunked_medicine_data.json")  
         self.vector_persist_directory = os.path.join(self.workspace_base_path, "datasets", "vectordb")
         self.embedding_model_id = "sentence-transformers/embeddinggemma-300m-medical"
@@ -56,7 +56,7 @@ class Rerank_RAG():
     def load_crossencoder(self):
         self.cross_encoder = CrossEncoder(self.cross_encoder_model_id)
 
-    def load_hypethetical_data(self):    
+    def load_questions_data(self):    
         with open(self.dataset_path, mode = "r", encoding="utf-8") as f:
             return json.load(f)
         
@@ -65,7 +65,7 @@ class Rerank_RAG():
             return json.load(f)      
         
     def build_medicine_retriever(self):        
-        hypethetical_data = self.load_hypethetical_data()  
+        questions_data = self.load_questions_data()  
         chunked_data = self.load_chunked_data()          
         docstore = InMemoryStore()
         id_key = "doc_id"
@@ -86,7 +86,7 @@ class Rerank_RAG():
         doc_ids = list()
         questions = list()
         docs = list()
-        for d in hypethetical_data[:10]:
+        for d in questions_data[:10]:
             doc_id = d["doc_id"]
             doc_ids.append(doc_id)
             docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))
@@ -102,7 +102,7 @@ class Rerank_RAG():
         self.retriever.docstore.mset(list(zip(doc_ids,docs)))  
         
     def load_existing_retriever(self):
-        hypethetical_data = self.load_hypethetical_data()
+        questions_data = self.load_questions_data()
         docstore = InMemoryStore()
         id_key = "doc_id"
         # The vectorstore to use to index the questions
@@ -120,7 +120,7 @@ class Rerank_RAG():
 
         doc_ids = list()        
         docs = list()
-        for d in hypethetical_data[:10]:
+        for d in questions_data[:10]:
             doc_id = d["doc_id"]
             doc_ids.append(doc_id)
             docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))
@@ -150,10 +150,10 @@ class Rerank_RAG():
         #Rerank part
         return retrieved_docs[ :top_k]
     
-__all__ = ["Rerank_RAG"]
+__all__ = ["Rerank_Retriever"]
 
 
 if __name__ == "__main__":
-    rag = Rerank_RAG()
+    rag = Rerank_Retriever()
     rag.setup_retriever()
     print(rag.retrieve("My nasal is disconfort. Do you have a medicine to relieve sinus congestion and pressure?",top_k=2))

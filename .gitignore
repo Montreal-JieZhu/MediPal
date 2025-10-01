@@ -1,6 +1,7 @@
 # My json file
 Agentic-RAG/datasets/
 data-pipeline/datasets/
+Agentic-RAG/audio/*.wav
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

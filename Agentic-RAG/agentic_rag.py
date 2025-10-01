@@ -1,7 +1,7 @@
 # My own libraries
 from mytools import best_dtype, best_device, login_huggingface, logging_print
 import settings
-from rerank_rag import Rerank_RAG
+from rerank_retriever import Rerank_Retriever
 # My own libraries
 
 import os
@@ -49,7 +49,7 @@ hug_pipeline = HuggingFacePipeline(pipeline=original_pipeline)
 master_llm = ChatHuggingFace(llm=hug_pipeline) # It is the brain of the whole system
 
 # tools
-rag = Rerank_RAG()
+rag = Rerank_Retriever()
 rag.setup_retriever()
 wiki = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
 brave_api_key = os.getenv("BRAVE_SEARCH_KEY")
@@ -441,10 +441,10 @@ def return_without_docs(state: AgentState) -> AgentState:
     """
     logging_print(f"===Step {settings.STEP}===\n")
     apology_sentences = [    
-        "We mainly provide information on medicines and medical topics. I’m sorry, but your question isn’t clear enough for me to give helpful details. Could you explain it a bit more?",
-        "Our focus is on drug and medical information. Apologies, your question is a little unclear, so I can’t provide useful guidance right now. Would you mind clarifying?",
-        "We specialize in medication and medical information. I’m afraid your question isn’t specific enough for me to assist effectively—could you give more detail?",
-        "TWe mainly handle information about medications and health care. Unfortunately, your query isn’t fully clear to me. Could you provide more explanation so I can help?"        
+        "We mainly provide information on medicines and medical topics. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
+        "Our focus is on drug and medical information. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
+        "We specialize in medication and medical information. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
+        "TWe mainly handle information about medications and health care. Your question may be beyond my scope of work. I apologize for not being able to provide more information."        
     ]
 
     state["retrieved_doc"] = random.choice(apology_sentences)

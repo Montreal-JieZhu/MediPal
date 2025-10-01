@@ -116,6 +116,41 @@ def greeting_back(state: AgentState) -> AgentState:
     return state
 
 #Action Node
+def answer_normally(state: AgentState) -> AgentState:
+    """
+    Greeting back    
+    """
+    query = state["query"]
+
+    logging_print(f"===Step {settings.STEP}===\n")    
+    logging_print(f"Master_Agent: I am answering normal message.\n")    
+     
+    prompt = PromptTemplate(
+        template="""You are a "Simple & Clear Answer" assistant.
+    Your job: read the user's message and reply with a very simple, easy-to-understand answer.
+
+    Rules:
+    - Use plain English and common words.
+    - Be direct. Answer the exact question first.
+    - Keep it short: 1-2 short sentences maximum.
+    - No jargon. If a term is necessary, add a 3-5 word explanation in parentheses.
+    - No extra facts, no links, no emojis, no disclaimers, no small talk.
+    - If the user asks for steps, give 3 or fewer bullet points, each 1 short line.
+    - If the message is not a question (e.g., a statement or request), give a short, helpful response that matches the intent.
+
+    User message: {message}
+
+    Your entire reply must follow the rules above and contain only the answer.""",
+        input_variables=["message"],
+    )
+    chain = prompt | master_llm | StrOutputParser()    
+    raw = chain.invoke({"message": query})
+    logging_print(f"Real output: {raw}\n")      
+    state["generation"] = str(raw)    
+    settings.STEP = 1
+    return state
+
+#Action Node
 def rag_calling(state: AgentState) -> AgentState:
     """
     Call Agentic RAG to retrieve relevant documents.   
@@ -140,7 +175,7 @@ def decide_retrieve_success(state: AgentState) -> str:
     else:
         logging_print(f"Master_Agent: There is no relevant docs from RAG.\n")          
         settings.STEP = 1 #reset step     
-        return "end"
+        return "answer_normally"
     
 #Action Node
 def grade_hallucination(state: AgentState) -> AgentState:
@@ -216,9 +251,13 @@ medipal_graph = StateGraph(AgentState)
 # Nodes
 medipal_graph.add_node("grade_greeting_node", grade_greeting_query)
 
+medipal_graph.add_node("decide_greeting_router", lambda state: state)
+
 medipal_graph.add_node("greeting_node", greeting_back)
 
 medipal_graph.add_node("call_rag_node", rag_calling)
+
+medipal_graph.add_node("decide_retrieve_success_router", lambda state: state)
 
 medipal_graph.add_node("generate_answer_node", answer_generater)
 
@@ -228,11 +267,15 @@ medipal_graph.add_node("decide_hallucination", lambda state: state)
 
 medipal_graph.add_node("save_node", save_to_memory)
 
+medipal_graph.add_node("answer_normally_node", answer_normally)
+
 #Edges
 medipal_graph.add_edge(START, "grade_greeting_node")
 
+medipal_graph.add_edge("grade_greeting_node", "decide_greeting_router")
+
 medipal_graph.add_conditional_edges(
-    source="grade_greeting_node",
+    source="decide_greeting_router",
     path=decide_greeting_query,
     path_map={
         "greeting": "greeting_node",
@@ -240,14 +283,14 @@ medipal_graph.add_conditional_edges(
     }
 )
 
-medipal_graph.add_edge("greeting_node", END)
+medipal_graph.add_edge("call_rag_node", "decide_retrieve_success_router")
 
 medipal_graph.add_conditional_edges(
-    source="call_rag_node",
+    source="decide_retrieve_success_router",
     path=decide_retrieve_success,
     path_map={
         "answer_generater": "generate_answer_node",
-        "end": END
+        "answer_normally": "answer_normally_node"
     }
 )
 
@@ -265,6 +308,8 @@ medipal_graph.add_conditional_edges(
     }
 )
 
+medipal_graph.add_edge("answer_normally_node", END)
+medipal_graph.add_edge("greeting_node", END)
 medipal_graph.add_edge("save_node", END)
 
 medipal_app = medipal_graph.compile()
