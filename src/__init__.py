@@ -1,0 +1,1 @@
+from .medipal.medipal import ask

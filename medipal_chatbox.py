@@ -4,9 +4,8 @@ import datetime
 from gtts import gTTS
 from faster_whisper import WhisperModel
 import requests
-from mytools import logging_print
 
-url = "http://127.0.0.1:30000/ask"
+url = "http://127.0.0.1:30000/ask" # medipal is running under the api
 
 workspace_base_path = os.getcwd()
 audio_path = os.path.join(workspace_base_path, "audio") 
@@ -29,8 +28,7 @@ def generate_response(query: str):
     """
     if not query:
         return "I didn’t catch anything. Please try speaking or typing."
-        
-    #params = {"question": query}
+      
     payload = {"query": query}
 
     # Send POST request
@@ -73,12 +71,10 @@ def voice_assistant(audio, text, history_state, use_audio_first):
         elif audio is not None:
             chosen_text = transcribe_audio(audio)
 
-        if not chosen_text:
-            logging_print("Chatbox didn't get a message.\n")
+        if not chosen_text:            
             raise gr.Error("Please provide either a voice recording or a text prompt.")
 
-        query = chosen_text.strip()
-        logging_print(f"Got a user's message from chatbox: {query}.\n")
+        query = chosen_text.strip()        
 
         # LLM response
         reply = generate_response(query)
@@ -209,8 +205,12 @@ with gr.Blocks(theme=gr.themes.Soft(), css=CSS, fill_height=True) as demo:
         outputs=[chat, text_in],
     )
         
+def launch_chatbox():
+    demo.launch(server_port=30001)
+
+__all__ = ["launch_chatbox"]
 
 if __name__ == "__main__":    
-    demo.launch(server_port=30001)
+    launch_chatbox()
 
 # python medipal_chatbox.py
