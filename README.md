@@ -32,6 +32,7 @@ Recently I search for some medicine for my friend using online pharmacies, I not
 3. I talked with a few pharmacy chatbots, but their answers were vague and unhelpful far from the intelligent guidance people need.
 
 > Example:  
+
 ![](./screenshots/problem6.png "")
 ![](./screenshots/problem7.png "")
 ![](./screenshots/problem8.png "")
@@ -253,4 +254,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 | Image             | `![alt](path_or_URL)`              |
 | Footnote[^1]      | `Here is a footnote reference[^1]` |
 
-[^1]: Footnote text goes here.
