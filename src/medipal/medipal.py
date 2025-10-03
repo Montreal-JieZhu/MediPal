@@ -1,7 +1,8 @@
 # My own libraries
 from ..config import settings
+from ..config.settings import AgentState
 from ..utils.mytools import logging_print
-from ..agenticrag.agentic_rag import rag_invoke, robust_binary_grader, AgentState, master_llm
+from ..agenticrag.agentic_rag import rag_invoke, robust_binary_grader, master_llm
 # My own libraries
 import random
 from langchain.prompts import PromptTemplate
@@ -148,7 +149,7 @@ def answer_normally(state: AgentState) -> AgentState:
     chain = prompt | master_llm | StrOutputParser()    
     raw = chain.invoke({"message": query})
     logging_print(f"Real output: {raw}\n")      
-    state["generation"] = str(raw)    
+    state["generation"] = f"""{str(raw)}, but {state["retrieved_doc"]}"""
     settings.STEP = 1
     return state
 
