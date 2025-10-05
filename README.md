@@ -1,6 +1,6 @@
-# MediPal: Your AI Friend for Medicine Q&A
+# MediPal: Your AI Friend for Medical/Clinical Q&A
 
-MediPal is an open-source medical chatbot that provides comprehensive drug information and symptom-based recommendations using natural-language understanding. It is powered by LLM, Agentic RAG and many more. 
+MediPal is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation. It is powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with agent frameworks like langchain, langgraph and many tools. 
 
 ---
 
@@ -23,20 +23,22 @@ MediPal is an open-source medical chatbot that provides comprehensive drug infor
 ---
 
 ## Motivation
-While using online pharmacies, I noticed several gaps in the customer experience.
+Recently I search for some medicine for my friend using online pharmacies, I noticed several gaps in the customer experience when I chat with their AI assistant.
 
-1. Hard to find a proper medicine unless I already know its exact name
+1. No matter what I say, they just say what they have to say by pre-defining process.
 
-2. Search only works with precise keyword search rather than **semantic, symptom-based queries**.
+2. Their responses were vague and unhelpful far from the intelligent.
 
 3. I talked with a few pharmacy chatbots, but their answers were vague and unhelpful far from the intelligent guidance people need.
 
 > Example:  
-![](./screenshots/problem1.png "")
+
+![](./screenshots/problem6.png "")
+![](./screenshots/problem7.png "")
+![](./screenshots/problem8.png "")
 
 ------------------------------------------------------------------------------------------
 
-![](./screenshots/problem4.PNG "")
 
 ---
 
@@ -252,13 +254,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 | Image             | `![alt](path_or_URL)`              |
 | Footnote[^1]      | `Here is a footnote reference[^1]` |
 
-[^1]: Footnote text goes here.
-
----
-
-> *Feel free to remove sections you don’t need. This template aims to cover most GitHub README use-cases so you can start fast and customize later.*
-
-```
-
-Copy this file into your repository as **`README.md`**, edit the placeholder text, and you’ll have a complete, well-structured GitHub-ready document.
-```

@@ -1,6 +1,7 @@
 # My own libraries
-from mytools import best_dtype, best_device, login_huggingface, logging_print
+from ..utils.mytools import best_dtype, best_device, login_huggingface, logging_print
 import settings
+from settings import AgentState, Short_Term_Memory
 from rerank_retriever import Rerank_Retriever
 # My own libraries
 
@@ -8,7 +9,7 @@ import os
 import json
 import re
 import random
-from typing import TypedDict, Any, Dict
+from typing import  Any, Dict
 from langgraph.graph import StateGraph, START, END
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory # Short-term Memory
@@ -19,8 +20,6 @@ from langchain_core.output_parsers import JsonOutputParser, StrOutputParser
 from langchain.output_parsers import OutputFixingParser
 from langchain_community.tools import WikipediaQueryRun, BraveSearch
 from langchain_community.utilities import WikipediaAPIWrapper
-
-
 
 #Global variable
 model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
@@ -55,77 +54,7 @@ wiki = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
 brave_api_key = os.getenv("BRAVE_SEARCH_KEY")
 brave = BraveSearch.from_api_key(api_key=brave_api_key, search_kwargs={"count": 3})
 
-#global variable
-
-#Global Class
-#Define a short-term memory
-class Short_Term_Memory():
-    def __init__(self) -> None: 
-        """Initialize the message container and current session id """       
-        self.session_store: dict[int,BaseChatMessageHistory] = {}
-        self.current_session_id: int = 0
-
-    def get_history(self, session_id: int) -> BaseChatMessageHistory:    
-        """return history messages by sessionId"""    
-        self.current_session_id = session_id
-        if session_id not in self.session_store:
-            self.session_store[session_id] = ChatMessageHistory()
-        return self.session_store[session_id]
-    
-    def get_current_history(self) -> BaseChatMessageHistory:
-        """return history messages for current session"""
-        return self.get_history(self.current_session_id)
-    
-    def add_message(self, session_id: int, message: str, msg_type: str) -> None:
-        history_messages = self.get_history(session_id)     
-        if msg_type == "ai": 
-            history_messages.add_ai_message(message)
-        else:
-            history_messages.add_user_message(message)   
-
-        if len(history_messages.messages) > 2: # Only keep the recent 2 messages
-            del history_messages.messages[0] # Remove the first message     
-            
-    
-    def delete_history(self, session_id: int) -> bool:
-        """delete history messages by sessionId"""
-        if session_id in self.session_store:
-            deleted = self.session_store.pop(session_id)
-            if deleted:
-                return True
-            else:
-                return False
-        return True
-    
-    def delete_current_history(self) -> bool:
-        """delete history messages for current session"""
-        return self.delete_history(self.current_session_id)
-
-class AgentState(TypedDict):
-    """
-    Represents the state of the graph.
-
-    Attributes:
-        session_id: current session id
-        query: user's query or augmented query
-        retrieved_doc: retrieval docment
-        generation: the answer the llm generate    
-        grade: keep the binary score for every router node to make decision   
-        wiki_used: Flag whether it already used Wiki search
-        brave_used: Flag whether it already used brave search
-        rewrite_counter: count rewrite action, maximum 3 times.
-    """
-    session_id: int
-    query: str
-    retrieved_doc: str
-    generation: str
-    grade: dict
-    wiki_used: bool      # Avoid infinity loop in graph
-    brave_used: bool     # Avoid infinity loop in graph
-    rewrite_counter: int # Avoid infinity loop in graph
-    regenerate_counter: int
-
-# Global Function    
+   
 # Convert a history chat message to a string
 def history_as_text(history: BaseChatMessageHistory) -> str:
     """convert history messsages into a string"""
@@ -444,7 +373,7 @@ def return_without_docs(state: AgentState) -> AgentState:
         "We mainly provide information on medicines and medical topics. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
         "Our focus is on drug and medical information. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
         "We specialize in medication and medical information. Your question may be beyond my scope of work. I apologize for not being able to provide more information.",
-        "TWe mainly handle information about medications and health care. Your question may be beyond my scope of work. I apologize for not being able to provide more information."        
+        "We mainly handle information about medications and health care. Your question may be beyond my scope of work. I apologize for not being able to provide more information."        
     ]
 
     state["retrieved_doc"] = random.choice(apology_sentences)
@@ -610,27 +539,27 @@ def decide_relevant_docs(state: AgentState) -> str:
 agentic_rag_graph = StateGraph(AgentState)
 # Add nodes
 
-agentic_rag_graph.add_node("retrieve_entry_node", retrieve)
-
 agentic_rag_graph.add_node("grade_selfcontained_node", grade_selfcontained_query)
 
-#agentic_rag_graph.add_node("decide_selfcontained_node", decide_selfcontained_query)
+agentic_rag_graph.add_node("decide_selfcontained_router", lambda state: state)
 
 agentic_rag_graph.add_node("grade_history_related_node", grade_history_related_query)
 
-#agentic_rag_graph.add_node("decide_history_related_node", decide_history_related_query)
+agentic_rag_graph.add_node("decide_history_related_router", lambda state: state)
 
 agentic_rag_graph.add_node("rewrite_query_node", rewrite_query)
 
 agentic_rag_graph.add_node("grade_clinical_node", grade_clinical_query)
 
-#agentic_rag_graph.add_node("decide_clinical_node", decide_clinical_query)
+agentic_rag_graph.add_node("decide_clinical_router", lambda state: state)
 
 agentic_rag_graph.add_node("retrieve_node", retrieve)
 
 agentic_rag_graph.add_node("decide_relevant_router", lambda state:state) # Transparent
 
 agentic_rag_graph.add_node("return_sorry_node", return_without_docs)
+
+#agentic_rag_graph.add_node("return_docs_node", return_with_docs)
 
 agentic_rag_graph.add_node("save_node", save_to_memory)
 
@@ -642,8 +571,10 @@ agentic_rag_graph.add_node("brave_search_node", brave_search)
 
 agentic_rag_graph.add_edge(START, "grade_selfcontained_node")
 
+agentic_rag_graph.add_edge("grade_selfcontained_node", "decide_selfcontained_router")
+
 agentic_rag_graph.add_conditional_edges(
-    source="grade_selfcontained_node",
+    source="decide_selfcontained_router",
     path=decide_selfcontained_query,
     path_map={
         "grade_clinical": "grade_clinical_node",
@@ -651,8 +582,10 @@ agentic_rag_graph.add_conditional_edges(
     }
 )
 
+agentic_rag_graph.add_edge("grade_history_related_node", "decide_history_related_router")
+
 agentic_rag_graph.add_conditional_edges(
-    source="grade_history_related_node",
+    source="decide_history_related_router",
     path=decide_history_related_query,
     path_map={
         "rewrite": "rewrite_query_node",
@@ -660,8 +593,10 @@ agentic_rag_graph.add_conditional_edges(
     }
 )
 
+agentic_rag_graph.add_edge("grade_clinical_node", "decide_clinical_router")
+
 agentic_rag_graph.add_conditional_edges(
-    source="grade_clinical_node",
+    source="decide_clinical_router",
     path=decide_clinical_query,
     path_map={
         "retrieve": "retrieve_node",
@@ -690,9 +625,12 @@ agentic_rag_graph.add_edge("brave_search_node", "decide_relevant_router")
 
 agentic_rag_graph.add_edge("return_sorry_node", "save_node")
 
+#agentic_rag_graph.add_edge("return_docs_node", "save_node")
+
 agentic_rag_graph.add_edge("save_node", END)
 
 app = agentic_rag_graph.compile()
+
 
 def call_rag(query: str):
     state = AgentState(query=query, session_id=1,wiki_used=False,brave_used=False,rewrite_counter=0)

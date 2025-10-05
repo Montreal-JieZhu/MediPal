@@ -1,6 +1,7 @@
 import settings
-from mytools import logging_print
-from agentic_rag import rag_invoke, robust_binary_grader, AgentState, master_llm
+from settings import AgentState
+from ..utils.mytools import logging_print
+from agentic_rag import rag_invoke, robust_binary_grader, master_llm
 import random
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -146,7 +147,7 @@ def answer_normally(state: AgentState) -> AgentState:
     chain = prompt | master_llm | StrOutputParser()    
     raw = chain.invoke({"message": query})
     logging_print(f"Real output: {raw}\n")      
-    state["generation"] = str(raw)    
+    state["generation"] = f"""{str(raw)}, but {state["retrieved_doc"]}"""
     settings.STEP = 1
     return state
 

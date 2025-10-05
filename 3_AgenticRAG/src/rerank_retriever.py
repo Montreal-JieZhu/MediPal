@@ -1,4 +1,4 @@
-from mytools import timed, login_huggingface
+from ..utils.mytools import timed, login_huggingface
 import os
 import json
 import copy

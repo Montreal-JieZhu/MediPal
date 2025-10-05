@@ -1,7 +1,7 @@
 # My json file
-2_AgenticRAG/datasets/
-1_DataPipeline/datasets/
-2_AgenticRAG/audio/*.wav
+3_AgenticRAG/src/datasets/
+2_DataPipeline/datasets/
+3_AgenticRAG/audio/*.wav
 src/retriever/datasets
 
 # Byte-compiled / optimized / DLL files

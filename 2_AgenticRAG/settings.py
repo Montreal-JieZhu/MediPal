@@ -1,3 +1,0 @@
-SESSION_ID: int = 0
-SHORT_TERM_MEMORY = None
-STEP: int = 0
