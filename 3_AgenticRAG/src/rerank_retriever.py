@@ -1,4 +1,4 @@
-from ..utils.mytools import timed, login_huggingface
+from .mytools import timed, login_huggingface
 import os
 import json
 import copy
@@ -33,9 +33,9 @@ class Rerank_Retriever():
     def __init__(self) -> None:
 
         self.workspace_base_path = os.getcwd()
-        self.dataset_path = os.path.join(self.workspace_base_path, "datasets", "medicine_data_questions.json")  
-        self.chunked_dataset_path = os.path.join(self.workspace_base_path, "datasets", "chunked_medicine_data.json")  
-        self.vector_persist_directory = os.path.join(self.workspace_base_path, "datasets", "vectordb")
+        self.dataset_path = os.path.join(self.workspace_base_path, "src", "datasets", "medicine_data_questions.json")  
+        self.chunked_dataset_path = os.path.join(self.workspace_base_path, "src", "datasets", "chunked_medicine_data.json")  
+        self.vector_persist_directory = os.path.join(self.workspace_base_path, "src", "datasets", "vectordb")
         self.embedding_model_id = "sentence-transformers/embeddinggemma-300m-medical"
         self.cross_encoder_model_id = "ncbi/MedCPT-Cross-Encoder" 
         self.vectorstore = None
@@ -86,14 +86,14 @@ class Rerank_Retriever():
         doc_ids = list()
         questions = list()
         docs = list()
-        for d in questions_data[:10]:
+        for d in questions_data[:100]:
             doc_id = d["doc_id"]
             doc_ids.append(doc_id)
             docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))
             for q in d["questions"]:
                 questions.append(Document(metadata={"doc_id": doc_id}, page_content=q))
 
-        for d in chunked_data[:10]: 
+        for d in chunked_data[:100]: 
             doc_id = d["doc_id"]        
             for q in d["docs"]:
                 questions.append(Document(metadata={"doc_id": doc_id}, page_content=q))
@@ -120,7 +120,7 @@ class Rerank_Retriever():
 
         doc_ids = list()        
         docs = list()
-        for d in questions_data[:10]:
+        for d in questions_data[:100]:
             doc_id = d["doc_id"]
             doc_ids.append(doc_id)
             docs.append(Document(metadata={"doc_id": doc_id}, page_content=d["original_doc"]))

@@ -80,7 +80,7 @@ def draw_langgraph(app: CompiledStateGraph, inline: bool = True):
         with open("langgraph_diagram.png", "wb") as f:
             f.write(png_bytes)
 
-def logging_print(log: str, print_out: bool = True):
+def logging_print(log: str, print_out: bool = False):
     """If print_out is True, print content out and logging
        If it is False, only logging
     """

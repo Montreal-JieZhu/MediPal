@@ -1,8 +1,8 @@
 # My own libraries
-from ..utils.mytools import best_dtype, best_device, login_huggingface, logging_print
-import settings
-from settings import AgentState, Short_Term_Memory
-from rerank_retriever import Rerank_Retriever
+from .mytools import best_dtype, best_device, login_huggingface, logging_print
+from . import settings
+from .settings import AgentState, Short_Term_Memory
+from .rerank_retriever import Rerank_Retriever
 # My own libraries
 
 import os
@@ -23,6 +23,7 @@ from langchain_community.utilities import WikipediaAPIWrapper
 
 #Global variable
 model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
+#model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
 login_huggingface() 
 # Load a local HuggingFace model. Inference it from local GPU.
 tokenizer = AutoTokenizer.from_pretrained(model_id)
