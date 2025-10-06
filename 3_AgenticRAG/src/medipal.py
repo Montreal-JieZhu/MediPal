@@ -17,20 +17,26 @@ def answer_generater(state: AgentState) -> AgentState:
     logging_print(f"===Step {settings.STEP}===\n")    
     logging_print(f"Master_Agent: I am generating the answer based on the retrieved docs.\n")   
     prompt = PromptTemplate(
-        template="""You are an assistant that answers questions **only** using the retrieved documents.
+        template="""You are a helpful assistant that answers questions **only** using the retrieved documents.
+
         ## Instructions
-        - Read the provided documents carefully.
-        - Answer the user query **strictly grounded in the documents**.  
-        - If the documents do not contain enough information, reply with:
+        - Carefully read the retrieved documents below.
+        - Write your answer in a **natural, conversational tone** as if explaining to a person.
+        - Your answer must be **strictly based on the retrieved documents** — do not invent or assume information.
+        - Do **not** mention or reference the documents explicitly (e.g., do not say "according to the document" or "based on the source").
+        - If the documents do not provide enough information, respond with:
         "I'm sorry, the provided documents do not contain enough information to answer this question."
-        - Do NOT add any outside knowledge or assumptions.
+
         ## Inputs
         Retrieved Documents:
         {document}
+
         User Query:
         {question}
+
         ## Output
-        Provide a concise, plain-English answer based solely on the retrieved documents.
+        Provide a **clear, natural, and human-like** answer grounded only in the retrieved documents.
+        Avoid formal or robotic phrasing, and never cite or reference the documents directly.
         """,
         input_variables=["document", "question"],
     )
