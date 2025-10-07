@@ -1,4 +1,11 @@
-<div style="display: flex; align-items: flex-start;">
+![](assets/screenshots/logo_small.PNG "")
+
+**MediPal** is your AI friend for medical and clinical Q&A.
+* It is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation.
+
+* Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools.
+
+<!-- <div style="display: flex; align-items: flex-start;">
   <div style="flex: 0 0 150px;">
     <img src="./screenshots/medipal_logo.PNG" alt="Logo" width="140" height="140" style="margin-right:15px;" />
   </div>
@@ -11,34 +18,29 @@
       </ul>
     </p>
   </div>
-</div>
+</div> -->
 
 ---
 
 ## Motivation
 1. **Easy examples with big LLM**
 
-Recently, I tried to implement a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good results.
+Recently, I tried to make a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good result.
 
 2. **Not good for deeper learning**
 
-This is good to learn how to use AI frameworks/tools, but it does not help me understand why and how gpt can do this. For example: How does it do reasoning? How does it break down a task? How does it use tools? How could its talks are always linked to previous conversations?
+This is good to learn how to use AI frameworks/tools, but it does not help me understand why and how gpt can do this. For example: How could it reason? How could it use tools? How could its talks are always linked to previous conversations?
 
 3. **Real project limits**
 
-In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models.
+In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models to build AI application. Those models usually doesn't have the same capability as gpt-4o has.
 
-#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to use small local models do similar Q&A task just like a big model do. 
-
----
-
-## Development Process
-
-![](assets/screenshots/development_process.PNG "")
+#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can do similar things just like a big model do. 
 
 ---
 
-## Design
+## Main Components
+
 MediPal is designed to have:
 
 1. **Comprehensive Medicine Knowledge Base**
@@ -60,50 +62,57 @@ MediPal is designed to have:
 
 ---
 
+## Development Process
+
+![](assets/screenshots/development_process.PNG "")
+
+---
+
 ## Project Structure
-The project is organized into five stages:
+The project is organized into six stages:
 
-1. **Data ETL Pipeline**
+1. **LLMs selections**
 
-   * Scrapes data from medicine websites.
-   * Preprocesses the data and analysis.
-   * Implements properly chunking strategy.
-   * Generates extra questions using local LLM.
+   * Test and compares three small LLMs.
+   * Analyze their strenghts and weaknesses so that I can use the right one for the project.
 
-2. **Agentic RAG**
+2. **Data ETL Pipeline**
 
-   * Combineds multi-vector retriever and re-ranking techniques to enhance retrieval efficiency and accuracy.
+   * Scrape data from medicine websites.
+   * Preprocess the data and analysis.
+   * Implement properly chunking strategy.
+   * Generate extra questions using local LLM.
+
+3. **Agentic RAG**
+
+   * Combined multi-vector retriever and re-ranking techniques to enhance retrieval efficiency and accuracy.
    * Add agentic elements and decomposes retrieval task into a series of yes/no questions so that the process go to the right direction.
-   * Calls external tools when no relevant documents are found in the local vector database.
+   * Call external tools when no relevant documents are found in the local vector database.
 
-3. **MediPal - Medical Q&A Agent**
+4. **MediPal - Medical Q&A Agent**
 
-   * Generates answers based on the retrieval documents with halluciation checking.
-   * Interacts with users on other topics, but emphasizes its primary role is to provide medical information.
-   * leverages external tools or MCP services to support users in the medical domain. For example, it can analysize and summarize conversations, then save them to Notion, or even help schedule an appointment with a doctor (Future stage!).
+   * Generate answers based on the retrieval documents with halluciation checking.
+   * Interact with users on other topics, but emphasizes its primary role is to provide medical information.
+   * leverage external tools or MCP services to support users in the medical domain. For example, it can analysize and summarize conversations, then save them to Notion, or even help schedule an appointment with a doctor (Future stage!).
 
-4. **FrontEnd**
+5. **FrontEnd**
 
-   * Places Medipal under a API endpoint, so that we only needs to launch it once. Other apps just need to interact with the api.
-   * Provides a chat interface that supports both text and voice conversations.
+   * Place Medipal under a API endpoint, so that we only needs to launch it once. Other apps just need to interact with the api.
+   * Provide a chat interface that supports both text and voice conversations.
 
-5. **Evaluation**
+6. **Evaluation**
 
-   * I set exact the same evaluation dataset, matrics and environment, comparing two sets of models. They have almost the same size but one set is general models, another one is fine-tuned on medical documents.
+   * I set exact the same evaluation dataset, matrics, temperature=0.1 and environment, comparing three models.
 
-| Medical Team      |  General Team                      |
-| ----------------- | ---------------------------------- |
-| sentence-transformers/embeddinggemma-300m-medical | google/embeddinggemma-300m |
-| ncbi/MedCPT-Cross-Encoder | cross-encoder/ms-marco-MiniLM-L6-v2 |
-| ContactDoctor/Bio-Medical-Llama-3-8B | meta-llama/Meta-Llama-3-8B-Instruct |
+| Medicial Expert      |  Normal Guy                     |  Big  Model                      |
+| ----------------- | ---------------------------------- |---------------------------------- |
+| ContactDoctor/Bio-Medical-Llama-3-8B | meta-llama/Meta-Llama-3-8B-Instruct | meta-llama/Meta-Llama-3-70B-Instruct |
   
 ```text
 MediPal/
 ├─ 1_LLM_Selection/                # Key Techniques/Tools: Langchain, Prompt Engineering, HuggingFace(transformers)
 │  ├─ README.md
 │  ├─ Test_and_Select_LLM.ipynb
-│  ├─ utils/
-│  │  └─ mytools.py 
 │  └─ .env
 │
 ├─ 2_DataPipeline/                 # Key Techniques/Tools: bs4.BeautifulSoup, Regex, matplotlib, Langchain, transformers
@@ -117,8 +126,8 @@ MediPal/
 │  ├─ datasets/*.json              # Scraped, cleaned, chunked and augmented dataset
 │  └─ .env
 │
-├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding Model, LLM, Memory, langgraph, Langchain, transformers, torch, 
-│  ├─ README.md                    # wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
+├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding Model, LLM, Memory, langgraph, Langchain, 
+│  ├─ README.md                    # transformers, torch, wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
 │  ├─ 1_Rerank_Retriever.ipynb
 │  ├─ 2_Agentic_RAG.ipynb
 │  ├─ 3_MediPal.ipynb
@@ -129,9 +138,8 @@ MediPal/
 │  │  ├─ agentic_rag.py
 │  │  ├─ medipal.py
 │  │  ├─ settings.py
+│  │  ├─ mytools.py
 │  │  └─ datasets/*.json
-│  ├─ utils/
-│  │  └─ mytools.py 
 │  └─ .env
 │
 ├─ src/                            # Moved and restructed all the codes from jupyter notebooks to src files
@@ -168,7 +176,7 @@ MediPal/
 
 ## Dataset 
 
-Only two sample medicine entries (manually processed) are included in this repo to show the data structure and help run the code.
+Only three sample medicine entries (manually processed) are included in this repo to show the data structure and help run the code.
 For full data scraping with 1_Medicine_data_collection.ipynb, please read the disclaimer first.
 
 ---
@@ -368,6 +376,6 @@ This project provides code for scraping content from MedlinePlus, a service of t
 
 Some MedlinePlus materials are in the public domain and may be reused freely with proper attribution. However, other materials (such as certain drug monographs, encyclopedia articles, and images) are copyrighted or licensed for use only on MedlinePlus.
 
-By using this code, you are responsible for ensuring that your use of MedlinePlus content complies with NLM policies and applicable copyright laws.
+This code only involves content in the public domain. If you use or modify this code to access any materials, please ensure that your use of MedlinePlus content complies with NLM policies and applicable copyright laws.
 
 Source attribution: “Courtesy of MedlinePlus from the National Library of Medicine (NLM), National Institutes of Health (NIH).”

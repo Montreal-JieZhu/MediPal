@@ -21,7 +21,9 @@ from langchain_community.tools import WikipediaQueryRun, BraveSearch
 from langchain_community.utilities import WikipediaAPIWrapper
 
 #Global variable
-model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
+#model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
+model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+#model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
 login_huggingface() 
 # Load a local HuggingFace model. Inference it from local GPU.
 tokenizer = AutoTokenizer.from_pretrained(model_id)

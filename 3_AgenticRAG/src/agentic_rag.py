@@ -22,8 +22,8 @@ from langchain_community.tools import WikipediaQueryRun, BraveSearch
 from langchain_community.utilities import WikipediaAPIWrapper
 
 #Global variable
-model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
-#model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+#model_id = "ContactDoctor/Bio-Medical-Llama-3-8B"
+model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
 #model_id = "meta-llama/Meta-Llama-3-70B-Instruct"
 login_huggingface() 
 # Load a local HuggingFace model. Inference it from local GPU.
@@ -49,7 +49,7 @@ hug_pipeline = HuggingFacePipeline(pipeline=original_pipeline)
 
 master_llm = ChatHuggingFace(llm=hug_pipeline) # It is the brain of the whole system
 
-print(f"Loaded {model_id} done！")
+print(f"Loaded {model_id} done!")
 # tools
 rag = Rerank_Retriever()
 rag.setup_retriever()
