@@ -37,7 +37,7 @@ JSON example:
       }
     ]
 }
-
+```
 ---
 
 ## MediPal -- 2. Data Preprocessing

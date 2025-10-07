@@ -71,36 +71,36 @@ MediPal is designed to have:
 ## Project Structure
 The project is organized into six stages:
 
-1. **LLMs selections**
+1. **[LLMs selections](https://github.com/Montreal-JieZhu/MediPal/tree/main/1_LLM_Selection)**
 
    * Test and compares three small LLMs.
    * Analyze their strenghts and weaknesses so that I can use the right one for the project.
 
-2. **Data ETL Pipeline**
+2. **[Data ETL Pipeline](https://github.com/Montreal-JieZhu/MediPal/tree/main/2_DataPipeline)**
 
    * Scrape data from medicine websites.
    * Preprocess the data and analysis.
    * Implement properly chunking strategy.
    * Generate extra questions using local LLM.
 
-3. **Agentic RAG**
+3. **[Agentic RAG](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
    * Combined multi-vector retriever and re-ranking techniques to enhance retrieval efficiency and accuracy.
    * Add agentic elements and decomposes retrieval task into a series of yes/no questions so that the process go to the right direction.
    * Call external tools when no relevant documents are found in the local vector database.
 
-4. **MediPal - Medical Q&A Agent**
+4. **[MediPal - Medical Q&A Agent](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
    * Generate answers based on the retrieval documents with halluciation checking.
    * Interact with users on other topics, but emphasizes its primary role is to provide medical information.
    * leverage external tools or MCP services to support users in the medical domain. For example, it can analysize and summarize conversations, then save them to Notion, or even help schedule an appointment with a doctor (Future stage!).
 
-5. **FrontEnd**
+5. **[FrontEnd](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
    * Place Medipal under a API endpoint, so that we only needs to launch it once. Other apps just need to interact with the api.
    * Provide a chat interface that supports both text and voice conversations.
 
-6. **Evaluation**
+6. **[Evaluation](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
    * I set exact the same evaluation dataset, matrics, temperature=0.1 and environment, comparing three models.
 
