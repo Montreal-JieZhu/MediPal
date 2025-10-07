@@ -21,7 +21,7 @@ def medipal_get_api(query: str):
     return {"message": ai_response}
     
 def launch_api():
-    uvicorn.run(app, host="0.0.0.0", port=30000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=30000, log_level="info") # I hard code the port here. you can change it, but remember to change the chatbox's url accordingly
     
 __all__ = ["launch_api"]
 

@@ -1,4 +1,4 @@
-## MediPal -- LLM test and select
+## MediPal -- LLM testing and selection
 
 ### In this section, I set five tasks to test three LLMs' performance, so that I can understand them and design the application properly.
 ##### Tasks:
@@ -8,6 +8,10 @@
 4. Solve Yes or No question
 5. Structured ouput
 
+##### Technique
+
+1. CoT prompting
+2. A few shots prompting
 
 ##### Target LLMs:
 1. meta-llama/Llama-3.2-1B-Instruct 
@@ -38,6 +42,7 @@ The model is trained to understand and generate text related to various biomedic
 | meta-llama/Meta-Llama-3-8B-Instruct   | Good👌           | Amazing👍          | 
 | ContactDoctor/Bio-Medical-Llama-3-8B  | Amazing👍        | Good👌              | 
 
+* Note: The questions Bio-Medical-Llama-3-8B generates are better because they sound more like natural user input rather than formal written language.
 
 #### Task 3: Answer question based on given content
 | LLM                                   | Answer Quality | Structured_output  | 

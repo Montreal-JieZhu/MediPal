@@ -85,7 +85,7 @@ The project is organized into six stages:
 
 3. **[Agentic RAG](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
-   * Combined multi-vector retriever and re-ranking techniques to enhance retrieval efficiency and accuracy.
+   * Combine multi-vector retriever and re-ranking techniques to enhance retrieval efficiency and accuracy.
    * Add agentic elements and decomposes retrieval task into a series of yes/no questions so that the process go to the right direction.
    * Call external tools when no relevant documents are found in the local vector database.
 
@@ -102,7 +102,7 @@ The project is organized into six stages:
 
 6. **[Evaluation](https://github.com/Montreal-JieZhu/MediPal/tree/main/3_AgenticRAG)**
 
-   * I set exact the same evaluation dataset, matrics, temperature=0.1 and environment, comparing three models.
+   * Evaluate MediPal by RAGAS. I changed different LLMs to compare the results. 
 
 | Medicial Expert      |  Normal Guy                     |  Big  Model                      |
 | ----------------- | ---------------------------------- |---------------------------------- |
@@ -115,7 +115,7 @@ MediPal/
 │  ├─ Test_and_Select_LLM.ipynb
 │  └─ .env
 │
-├─ 2_DataPipeline/                 # Key Techniques/Tools: bs4.BeautifulSoup, Regex, matplotlib, Langchain, transformers
+├─ 2_DataPipeline/                 # Key Techniques/Tools: bs4.BeautifulSoup, Regex, matplotlib, Langchain, HuggingFace(transformers), pydantic
 │  ├─ README.md
 │  ├─ 1_Medicine_data_collection.ipynb
 │  ├─ 2_Medicine_data_preprocessing_analysis.ipynb
@@ -126,8 +126,8 @@ MediPal/
 │  ├─ datasets/*.json              # Scraped, cleaned, chunked and augmented dataset
 │  └─ .env
 │
-├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding Model, LLM, Memory, langgraph, Langchain, 
-│  ├─ README.md                    # transformers, torch, wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
+├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, LLM, Memory, langgraph, Langchain, pydantic, prompting
+│  ├─ README.md                    # OutputPasers, transformers, PyTorch, typing, wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
 │  ├─ 1_Rerank_Retriever.ipynb
 │  ├─ 2_Agentic_RAG.ipynb
 │  ├─ 3_MediPal.ipynb
@@ -157,7 +157,7 @@ MediPal/
 │  └─ __init__.py  
 │
 ├─ assets/ 
-│  ├─ screenshots/                   # Pictures
+│  ├─ screenshots/                 # Pictures
 │  └─ *.PNG
 │
 ├─ medipal_api.py
