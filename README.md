@@ -163,11 +163,9 @@ For full data collection with 1_Medicine_data_collection.ipynb, please read the 
 
 ### Prerequisites
 
-Highly recommend using a virtual Python environment.
-
-```bash
-python == 3.11
-```
+| GPU      | CUDA      | Pytorch  | python  |
+| -------- | --------- | -------  | ------- |
+| NVIDIA-SMI 565.57.01 | 12.7 | 2.8 | 3.11 |
 
 ### Installation
 
