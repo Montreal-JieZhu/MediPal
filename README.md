@@ -133,7 +133,7 @@ MediPal/
 │  ├─ 3_MediPal.ipynb
 │  ├─ 4_API_Chatbox.ipynb
 │  ├─ 5_Evaluation.ipynb
-│  ├─ src/
+│  ├─ src/                        
 │  │  ├─ rerank_retriever.py
 │  │  ├─ agentic_rag.py
 │  │  ├─ medipal.py
@@ -177,7 +177,7 @@ MediPal/
 ## Dataset 
 
 Only three sample medicine entries (manually processed) are included in this repo to show the data structure and help run the code.
-For full data scraping with 1_Medicine_data_collection.ipynb, please read the disclaimer first.
+For full data collection with 1_Medicine_data_collection.ipynb, please read the disclaimer first.
 
 ---
 
@@ -188,7 +188,6 @@ For full data scraping with 1_Medicine_data_collection.ipynb, please read the di
 List all software or tools required.
 
 ```bash
-# Example
 python >= 3.11
 ```
 
@@ -197,8 +196,8 @@ python >= 3.11
 Step-by-step guide:
 
 ```bash
-git clone https://github.com/yourname/yourproject.git
-cd yourproject
+git clone https://github.com/Montreal-JieZhu/MediPal.git
+cd MediPal
 pip install -r requirements.txt
 ```
 
