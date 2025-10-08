@@ -69,7 +69,7 @@ MediPal is designed to have:
 ---
 
 ## Project Structure
-The project is organized into six stages:
+The project is organized into six stages. The Jupyter notebooks mainly show the implementation process at each stage. After completing each stage, I reorganized the code into Python files. Each stage makes use of the Python files and data results from the previous stage.
 
 1. **[LLMs selections](https://github.com/Montreal-JieZhu/MediPal/tree/main/1_LLM_Selection)**
 
@@ -114,7 +114,6 @@ MediPal/
 │  ├─ README.md
 │  ├─ Test_and_Select_LLM.ipynb
 │  └─ .env
-│
 ├─ 2_DataPipeline/                 # Key Techniques/Tools: bs4.BeautifulSoup, Regex, matplotlib, Langchain, HuggingFace(transformers), pydantic
 │  ├─ README.md
 │  ├─ 1_Medicine_data_collection.ipynb
@@ -125,7 +124,6 @@ MediPal/
 │  │  └─ mytools.py 
 │  ├─ datasets/*.json              # Scraped, cleaned, chunked and augmented dataset
 │  └─ .env
-│
 ├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, LLM, Memory, langgraph, Langchain, pydantic, prompting
 │  ├─ README.md                    # OutputPasers, transformers, PyTorch, typing, wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
 │  ├─ 1_Rerank_Retriever.ipynb
@@ -141,7 +139,6 @@ MediPal/
 │  │  ├─ mytools.py
 │  │  └─ datasets/*.json
 │  └─ .env
-│
 ├─ src/                            # Moved and restructed all the codes from jupyter notebooks to src files
 │  ├─ retriever/
 │  │  ├─ rerank_retriever.py
@@ -155,21 +152,17 @@ MediPal/
 │  ├─ utils/
 │  │  └─ mytools.py 
 │  └─ __init__.py  
-│
 ├─ assets/ 
-│  ├─ screenshots/                 # Pictures
-│  └─ *.PNG
-│
+│  └─ screenshots/                 # Pictures
+│     └─ *.PNG  
 ├─ medipal_api.py
-│
 ├─ medipal_chatbox.py
-│
 ├─ .env
-│
 ├─ Requirements.txt
-│
+├─ pyproject.toml
+├─ uv.lock
+├─ Requirements.txt
 ├─ LICENSE
-│
 └─ README.md                       # Main project overview
 
 ````
@@ -185,19 +178,43 @@ For full data collection with 1_Medicine_data_collection.ipynb, please read the 
 
 ### Prerequisites
 
-List all software or tools required.
+Highly recommend using a virtual Python environment.
 
 ```bash
-python >= 3.11
+python == 3.11
 ```
 
 ### Installation
 
-Step-by-step guide:
+Step 1: Clone repository
 
 ```bash
 git clone https://github.com/Montreal-JieZhu/MediPal.git
 cd MediPal
+```
+
+Step 2: Setup python environment and install packages by uv or conda
+
+If you have uv
+
+```bash
+uv sync
+```
+
+If you have conda
+
+```bash
+conda create -n ai311 python=3.11
+conda activate ai311
+pip install -r requirements.txt
+```
+
+If you only have python
+
+```bash
+python3.11 -m venv ai311
+source ai311/Scripts/activate # Linux/MacOS
+ai311\Scripts\activate        # Windows
 pip install -r requirements.txt
 ```
 
@@ -205,13 +222,19 @@ pip install -r requirements.txt
 
 ## 🖥 Usage
 
-Provide clear examples:
+Step 1: Launch API endpoint
 
 ```bash
-python src/main.py --config config.yaml
+python -m medipal_api
 ```
 
-You can also show **inline code** like `python main.py` within a sentence.
+Step 2: Launch Chatbox
+
+```bash
+python -m medipal_chatbox
+```
+
+Step 3: Copy and pasty **http://127.0.0.1:30001** into browser
 
 ---
 
@@ -222,113 +245,6 @@ You can also show **inline code** like `python main.py` within a sentence.
 | Variable      | Description              | Default |
 | ------------- | ------------------------ | ------- |
 | `HUGGINGFACE_KEY`| Your own huggingface key like "hf_xxxxxxxxxxxxxxxx" | None    |
-
----
-
-## 🔗 Links
-
-* **Documentation:** [Project Docs](https://example.com/docs)
-* **Demo:** [Live Demo](https://example.com/demo)
-
----
-
-## 🧩 Examples
-
-Embed different code languages:
-
-<details>
-<summary>Python</summary>
-
-```python
-from yourmodule import run
-run()
-```
-
-</details>
-
-<details>
-<summary>JavaScript</summary>
-
-```javascript
-import { run } from 'yourmodule';
-run();
-```
-
-</details>
-
----
-
-## ✅ Tests
-
-```bash
-pytest tests/
-```
-
----
-
-## 🛣 Roadmap
-
-* [ ] Add authentication
-* [ ] Implement CI/CD
-* [ ] Multi-language support
-
-See the [open issues](https://github.com/yourname/yourproject/issues) for full list.
-
----
-
-## 🤝 Contributing
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📜 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-## 🙏 Acknowledgements
-
-* [Awesome Library](https://github.com/some/library)
-* [Inspiration Blog Post](https://example.com)
-
----
-
-### Markdown Tips & Samples
-
-| Element           | Syntax Example                     |
-| ----------------- | ---------------------------------- |
-| **Bold**          | `**text**`                         |
-| *Italic*          | `*text*`                           |
-| ~~Strikethrough~~ | `~~text~~`                         |
-| Blockquote        | `> quoted text`                    |
-| Checklist         | `- [ ] item` or `- [x] done`       |
-| Link              | `[title](URL)`                     |
-| Image             | `![alt](path_or_URL)`              |
-| Footnote[^1]      | `Here is a footnote reference[^1]` |
-
----
-
-## Table of Contents
-- [Motivation](#motivation)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Examples](#examples)
-- [Tests](#tests)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
 
 ---
 
