@@ -5,21 +5,6 @@
 
 * Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools.
 
-<!-- <div style="display: flex; align-items: flex-start;">
-  <div style="flex: 0 0 150px;">
-    <img src="./screenshots/medipal_logo.PNG" alt="Logo" width="140" height="140" style="margin-right:15px;" />
-  </div>
-  <div style="flex: 1; padding-left: 15px;">
-    <p>
-      <b>MediPal</b> is your AI friend for medical and clinical Q&A. 
-      <ul>
-         <li>It is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation.</li>
-         <li>Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools. </li>
-      </ul>
-    </p>
-  </div>
-</div> -->
-
 ---
 
 ## Motivation
@@ -193,9 +178,9 @@ git clone https://github.com/Montreal-JieZhu/MediPal.git
 cd MediPal
 ```
 
-Step 2: Setup python environment and install packages by uv or conda
+Step 2: Setup python environment and install packages
 
-If you have uv
+If you have **uv  -- fastest**
 
 ```bash
 uv sync
@@ -234,7 +219,7 @@ Step 2: Launch Chatbox
 python -m medipal_chatbox
 ```
 
-Step 3: Copy and pasty **http://127.0.0.1:30001** into browser
+Step 3: Copy and paste **http://127.0.0.1:30001** into browser
 
 ---
 
