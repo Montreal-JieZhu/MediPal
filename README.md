@@ -25,7 +25,7 @@
 ## Motivation
 1. **Easy examples with big LLM**
 
-Recently, I tried to make a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good result.
+Recently, I tried to make a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good user experience.
 
 2. **Not good for deeper learning**
 
@@ -35,7 +35,7 @@ This is good to learn how to use AI frameworks/tools, but it does not help me un
 
 In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models to build AI application. Those models usually doesn't have the same capability as gpt-4o has.
 
-#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can do similar things just like a big model do. 
+#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can give us similar user experience like a big model do. 
 
 ---
 
@@ -49,12 +49,12 @@ MediPal is designed to have:
 
 2. **Evaluation and Decision Patterns**
 
-   * Instead of solving a problem at once, it is better to break the problem into small yes-or-no questions. 
+   * Instead of solving a problem at once, I decomposed a problem into small yes-or-no questions. 
    * The model can evaluate and decide what to do next. By repeating this process, until solve a problem correctly.
 
 3. **Conversation Memory**
 
-   * Remembers previous conversations, so that its talks can always stay connected with the context.
+   * Remembers previous conversations, so that its talks always stay connected with the context.
 
 4. **External tools**
 

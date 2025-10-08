@@ -133,8 +133,8 @@ CSS = """
 # UI
 # ----------------------------
 with gr.Blocks(theme=gr.themes.Soft(), css=CSS, fill_height=True) as demo:
-    gr.HTML('<div id="title">🎙️ English Voice Assistant</div>')
-    gr.HTML('<div id="subtitle">Gradio • Whisper (ASR) • LLM • TTS</div>')
+    gr.HTML('<div id="title">MediPal</div>')
+    gr.HTML('<div id="subtitle">Your AI friend for medical and clinical Q&A</div>')
 
     with gr.Row():
         with gr.Column(scale=2):
@@ -206,7 +206,7 @@ with gr.Blocks(theme=gr.themes.Soft(), css=CSS, fill_height=True) as demo:
     )
         
 def launch_chatbox():
-    demo.launch(server_port=30001)
+    demo.launch(server_port=30001) # I hard code the port here, you can change it
 
 __all__ = ["launch_chatbox"]
 
