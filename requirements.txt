@@ -1,9 +1,5 @@
-langid
-matplotlib
 langchain
 langchain-huggingface
-jupyter
-ipywidgets
 torch
 transformers
 accelerate
@@ -13,7 +9,8 @@ sentence-transformers
 langgraph-cli[inmem]
 langgraph-sdk
 wikipedia
-streamlit
+langid
+matplotlib
 ragas
 uvicorn
 fastapi
