@@ -8,7 +8,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from sentence_transformers import CrossEncoder
-
+from pathlib import Path
 # Wrap them up
 
 class Rerank_Retriever():
@@ -32,10 +32,10 @@ class Rerank_Retriever():
     """
     def __init__(self) -> None:
 
-        self.workspace_base_path = os.getcwd()
-        self.dataset_path = os.path.join(self.workspace_base_path, "src", "datasets", "medicine_data_questions.json")  
-        self.chunked_dataset_path = os.path.join(self.workspace_base_path, "src", "datasets", "chunked_medicine_data.json")  
-        self.vector_persist_directory = os.path.join(self.workspace_base_path, "src", "datasets", "vectordb")
+        self.workspace_base_path = Path(__file__).parent
+        self.dataset_path = os.path.join(self.workspace_base_path, "datasets", "medicine_data_questions.json")  
+        self.chunked_dataset_path = os.path.join(self.workspace_base_path, "datasets", "chunked_medicine_data.json")  
+        self.vector_persist_directory = os.path.join(self.workspace_base_path, "datasets", "vectordb")
         self.embedding_model_id = "sentence-transformers/embeddinggemma-300m-medical"
         self.cross_encoder_model_id = "ncbi/MedCPT-Cross-Encoder" 
         self.vectorstore = None

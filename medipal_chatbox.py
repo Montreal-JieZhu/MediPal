@@ -4,11 +4,16 @@ import datetime
 from gtts import gTTS
 from faster_whisper import WhisperModel
 import requests
+from pathlib import Path
 
 url = "http://127.0.0.1:30000/ask" # medipal is running under the api
 
+logo_path = Path(__file__).parent/"assets/screenshots/logo_small.PNG"
+
 workspace_base_path = os.getcwd()
-audio_path = os.path.join(workspace_base_path, "audio") 
+audio_path = os.path.join(workspace_base_path, "assets", "audio") 
+out_path = Path(audio_path)
+out_path.mkdir(parents=True, exist_ok=True)
 timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 asr_model = WhisperModel("turbo")
 
@@ -135,6 +140,21 @@ CSS = """
 with gr.Blocks(theme=gr.themes.Soft(), css=CSS, fill_height=True) as demo:
     gr.HTML('<div id="title">MediPal</div>')
     gr.HTML('<div id="subtitle">Your AI friend for medical and clinical Q&A</div>')
+
+#     gr.HTML(f"""<div style="display: flex; align-items: flex-start;">
+#   <div style="flex: 0 0 150px;">
+#     <img src="https://github.com/Montreal-JieZhu/MediPal/blob/main/assets/screenshots/logo_small.PNG" alt="Logo" width="140" height="140" style="margin-right:15px;" />
+#   </div>
+#   <div style="flex: 1; padding-left: 15px;">
+#     <p>
+#       <b>MediPal</b> is your AI friend for medical and clinical Q&A. 
+#       <ul>
+#          <li>It is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation.</li>
+#          <li>Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools. </li>
+#       </ul>
+#     </p>
+#   </div>
+# </div>""")
 
     with gr.Row():
         with gr.Column(scale=2):
