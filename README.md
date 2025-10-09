@@ -95,24 +95,24 @@ The project is organized into six stages. The Jupyter notebooks mainly show the 
   
 ```text
 MediPal/
-├─ 1_LLM_Selection/                # Key Techniques/Tools: Langchain, Prompt Engineering, HuggingFace(transformers)
-│  ├─ README.md
+├─ 1_LLM_Selection/                # Tech: Langchain, Prompt Engineering, HuggingFace 
+│  ├─ README.md                            
 │  ├─ Test_and_Select_LLM.ipynb
 │  └─ .env
-├─ 2_DataPipeline/                 # Key Techniques/Tools: bs4.BeautifulSoup, Regex, matplotlib, Langchain, HuggingFace(transformers), pydantic
-│  ├─ README.md
+├─ 2_DataPipeline/                 # Tech: bs4.BeautifulSoup, Regex, matplotlib, Langchain，
+│  ├─ README.md                            transformers, pydantic
 │  ├─ 1_Medicine_data_collection.ipynb
 │  ├─ 2_Medicine_data_preprocessing_analysis.ipynb
 │  ├─ 3_Medicine_data_chunking.ipynb
 │  ├─ 4_Medicine_data_generate_questions.ipynb
 │  ├─ utils/
 │  │  └─ mytools.py 
-│  ├─ datasets/*.json              # Scraped, cleaned, chunked and augmented dataset
+│  ├─ datasets/*.json              
 │  └─ .env
-├─ 3_AgenticRAG/                   # Key Techniques/Tools: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, LLM, Memory, langgraph, Langchain, pydantic, prompting
-│  ├─ README.md                    # OutputPasers, transformers, PyTorch, typing, wikipadia, brave search, logging, whisper, gtts, fastapi, gradio, unicorn, RAGAS  
-│  ├─ 1_Rerank_Retriever.ipynb
-│  ├─ 2_Agentic_RAG.ipynb
+├─ 3_AgenticRAG/                   # Tech: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, 
+│  ├─ README.md                            LLM, Memory, langgraph, Langchain, pydantic, prompting，
+│  ├─ 1_Rerank_Retriever.ipynb             OutputPasers, transformers, PyTorch, typing, wikipadia, 
+│  ├─ 2_Agentic_RAG.ipynb                  brave search，RAGAS, logging, whisper, gtts, fastapi, gradio, unicorn   
 │  ├─ 3_MediPal.ipynb
 │  ├─ 4_API_Chatbox.ipynb
 │  ├─ 5_Evaluation.ipynb
@@ -163,9 +163,9 @@ For full data collection with 1_Medicine_data_collection.ipynb, please read the 
 
 ### Prerequisites
 
-| GPU      | CUDA      | Pytorch    | Linux  | python  |
-| -------- | --------- | -------    | ------- | ------- |
-| NVIDIA-SMI 565.57.01 | 12.7 | 2.8 | Ubuntu 22.04.4 LTS | 3.11 |
+| GPU                  | CUDA      | Pytorch    | Linux              | python  |
+| -------------------- | --------- | ---------- | ------------------ | ------- |
+| NVIDIA-SMI 565.57.01 | 12.7      | 2.8        | Ubuntu 22.04.4 LTS | 3.11    |
 
 ### Installation
 
