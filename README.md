@@ -163,41 +163,56 @@ For full data collection with 1_Medicine_data_collection.ipynb, please read the 
 
 ### Prerequisites
 
-| GPU      | CUDA      | Pytorch  | python  |
-| -------- | --------- | -------  | ------- |
-| NVIDIA-SMI 565.57.01 | 12.7 | 2.8 | 3.11 |
+| GPU      | CUDA      | Pytorch    | Linux  | python  |
+| -------- | --------- | -------    | ------- | ------- |
+| NVIDIA-SMI 565.57.01 | 12.7 | 2.8 | Ubuntu 22.04.4 LTS | 3.11 |
 
 ### Installation
 
 Step 1: Clone repository
 
-```bash
+```
 git clone https://github.com/Montreal-JieZhu/MediPal.git
 cd MediPal
 ```
 
-Step 2: Setup python environment and install packages
+Step 2: Setup python environment
 
-If you have **uv  -- fastest**
+If you have **uv  -- one cmd done**
 
-```bash
+```
 uv sync
 ```
 
-If you have conda
-
-```bash
-conda create -n ai311 python=3.11
-conda activate ai311
-pip install -r requirements.txt
+Python:
+```
+python -m venv venv
+```
+Conda:
+```
+conda create -n venv python=3.11
 ```
 
-If you only have python
+Activate environment
 
-```bash
-python3.11 -m venv ai311
-source ai311/Scripts/activate # Linux/MacOS
-ai311\Scripts\activate        # Windows
+Linux/macOS:
+```
+source venv/bin/activate
+```
+
+Windows: 
+```
+venv\Scripts\activate
+```
+
+Conda:
+```
+conda activate venv
+```
+
+Step 3: Install requirements
+
+```
 pip install -r requirements.txt
 ```
 
