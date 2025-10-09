@@ -20,7 +20,7 @@ This is good to learn how to use AI frameworks/tools, but it does not help me un
 
 In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models to build AI application. Those models usually doesn't have the same capability as gpt-4o has.
 
-#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can give us similar user experience like a big model do. 
+#### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can give us similar user experience. 
 
 ---
 
