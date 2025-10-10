@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  api:
+    image: medipal:latest
+    build: .
+    command: python -m medipal_api
+    ports:
+      - "30000:30000"
+    restart: always
+
+  chatbox:
+    image: medipal:latest
+    command: python -m medipal_chatbox
+    ports:
+      - "30001:30001"
+    restart: always

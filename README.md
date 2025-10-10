@@ -109,10 +109,10 @@ MediPal/
 │  │  └─ mytools.py 
 │  ├─ datasets/*.json              
 │  └─ .env
-├─ 3_AgenticRAG/                   # Tech: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, 
+├─ 3_AgenticRAG/                   # Tech: Muilti-Vector, Chroma, CrossEncoder(BERT), Embedding, LCEL 
 │  ├─ README.md                            LLM, Memory, langgraph, Langchain, pydantic, prompting，
 │  ├─ 1_Rerank_Retriever.ipynb             OutputPasers, transformers, PyTorch, typing, wikipadia, 
-│  ├─ 2_Agentic_RAG.ipynb                  brave search，RAGAS, logging, whisper, gtts, fastapi, gradio, unicorn   
+│  ├─ 2_Agentic_RAG.ipynb                  brave search，RAGAS, logging, whisper, gtts, fastapi, gradio, uvicorn   
 │  ├─ 3_MediPal.ipynb
 │  ├─ 4_API_Chatbox.ipynb
 │  ├─ 5_Evaluation.ipynb
