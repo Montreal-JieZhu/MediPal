@@ -132,29 +132,48 @@ CSS = """
     font-size: 0.875rem;
     margin-top: 8px;
     }
+    .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+    padding: 0px 0px;
+    background: linear-gradient(to right, #f9fafb, #eef2f3);
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .header-logo img {
+    height: 70px;
+    border-radius: 10px;
+    }
+
+    .header-text {
+    text-align: left;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f2937;
+    }
     """
 
 # ----------------------------
 # UI
 # ----------------------------
 with gr.Blocks(theme=gr.themes.Soft(), css=CSS, fill_height=True) as demo:
-    gr.HTML('<div id="title">MediPal</div>')
-    gr.HTML('<div id="subtitle">Your AI friend for medical and clinical Q&A</div>')
+    # gr.HTML('<div id="title">MediPal</div>')
+    # gr.HTML('<div id="subtitle">Your AI friend for medical and clinical Q&A</div>')
+    with gr.Row():
+        gr.Image(
+            value="assets/screenshots/logo_small.PNG",   # local logo file
+            show_label=False,
+            container=False,
+            height=100,
+            width=100
+        )
+        gr.Markdown(
+            "### **MediPal AI**  \nYour Intelligent Medical Assistant 🩺",
+            elem_id="header-text",
+            elem_classes="header-text"
+        )
 
-#     gr.HTML(f"""<div style="display: flex; align-items: flex-start;">
-#   <div style="flex: 0 0 150px;">
-#     <img src="https://github.com/Montreal-JieZhu/MediPal/blob/main/assets/screenshots/logo_small.PNG" alt="Logo" width="140" height="140" style="margin-right:15px;" />
-#   </div>
-#   <div style="flex: 1; padding-left: 15px;">
-#     <p>
-#       <b>MediPal</b> is your AI friend for medical and clinical Q&A. 
-#       <ul>
-#          <li>It is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation.</li>
-#          <li>Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools. </li>
-#       </ul>
-#     </p>
-#   </div>
-# </div>""")
 
     with gr.Row():
         with gr.Column(scale=2):
