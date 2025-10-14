@@ -12,9 +12,9 @@
 
 Recently, I tried to make a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good user experience.
 
-2. **Not good for deeper learning**
+2. **Not good for learning**
 
-This is good to learn how to use AI frameworks/tools, but it does not help me understand why and how gpt can do this. For example: How could it reason? How could it use tools? How could its talks are always linked to previous conversations?
+This is good to learn how to use AI frameworks/tools, but it does not help me understand why and how gpt can do this. For example: How could it reason? How could it use tools? Why could its talks are always linked to previous conversations?
 
 3. **Real project limits**
 

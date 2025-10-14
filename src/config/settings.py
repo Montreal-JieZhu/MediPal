@@ -35,8 +35,7 @@ class Short_Term_Memory():
             history_messages.add_user_message(message)   
 
         if len(history_messages.messages) > 2: # Only keep the recent 2 messages
-            del history_messages.messages[0] # Remove the first message     
-            
+            del history_messages.messages[0] # Remove the first message    
     
     def delete_history(self, session_id: int) -> bool:
         """delete history messages by sessionId"""
