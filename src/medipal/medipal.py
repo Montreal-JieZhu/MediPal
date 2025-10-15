@@ -195,7 +195,7 @@ def grade_hallucination(state: AgentState) -> AgentState:
     retrieval_doc = state["retrieved_doc"]
 
     logging_print(f"===Step {settings.STEP}===\n")  
-    logging_print(f"Master_Agent: I am checking if the answer has hallucination.\n")
+    logging_print(f"Master_Agent: I am checking if the answer is completely grounded in the document.\n")
     prompt = PromptTemplate(
         template="""
     You are a classifier that checks if an **answer is fully supported by the provided document**.
