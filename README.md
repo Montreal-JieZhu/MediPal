@@ -248,9 +248,8 @@ Step 3: Copy and paste **http://127.0.0.1:30001** into browser
 
 ## Demo
 
-[![Watch the Demo](assets/screenshots/MediPal_Full_workflow.PNG)](assets/video/demo.mov)
+[![Watch the Demo](assets/screenshots/MediPal_Full_workflow.PNG)](assets/video/demo.mp4)
 
-https://github.com/Montreal-JieZhu/MediPal/blob/main/assets/video/demo.mov
 ---
 
 ## Citation:
