@@ -246,6 +246,13 @@ Step 3: Copy and paste **http://127.0.0.1:30001** into browser
 
 ---
 
+## Demo
+
+[![Watch the Demo](assets/screenshots/MediPal_Full_workflow.PNG)](assets/video/demo.mp4)
+
+
+---
+
 ## Citation:
 
 **Data Source:** Content obtained from MedlinePlus(https://medlineplus.gov/), a service of the U.S. National Library of Medicine (NLM), National Institutes of Health (NIH). Courtesy of the National Library of Medicine.
