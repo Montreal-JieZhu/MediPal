@@ -1,24 +1,26 @@
 ![](assets/screenshots/logo_small.PNG "")
 
 **MediPal** is your AI friend for medical and clinical Q&A.
-* It is an open-source medical assistant that provides comprehensive mediciation information and symptom-based recommendations using natural-language understanding which supports voice and message conversation.
+* It is an open-source medical assistant that provides comprehensive medication information and symptom-based recommendations using NLP which supports voice and message conversation.
 
 * Powered by local Huggingface LLMs, embedding model, cross-encoder(BERT) and whisper with AI Agent development frameworks like langchain, langgraph and many tools.
 
 ---
 
 ## Motivation
-1. **Easy examples with big LLM**
+1. **Problems of Standard RAG**
 
-Recently, I tried to make a medical Q&A agent, I saw that many code examples use big models like gpt-4o. With a few lines of code, I can get pretty good user experience.
+   Recently, I tried to make a medical Q&A agent with RAG, I had very bad experience with standard RAG.
+   * No matter what I said, it always tried to retrieve documents. But I only wanted it to retrieve documents when my question was medical-related.
+   * I asked “What is Phenylephrine?” in one turn and then asked “How do I take it?” in the next turn. It didn’t know what “it” refers to.
 
-2. **Not good for learning**
+2. **Easy examples with big LLM**
 
-This is good to learn how to use AI frameworks/tools, but it does not help me understand why and how gpt can do this. For example: How could it reason? How could it use tools? Why could its talks are always linked to previous conversations?
+   I tried to make an Agentic RAG to solve the problem. When I followed many code examples using big models like OpenAI “gpt-4o”. With a few lines of code, I can get a pretty good user experience. But when I tried the same things with the local LLM like “Meta-Llama-3-8B-Instruct”, it was a totally different story. 
 
 3. **Real project limits**
 
-In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models to build AI application. Those models usually doesn't have the same capability as gpt-4o has.
+   In real projects, we often has limited resource, as we need to manage cost and keep data security. Sometimes we must use small local models to build AI application. Those models usually doesn't have the same capability as gpt-4o has.
 
 #### So this project is not to build a very fancy and powerful AI application, instead **My main motivation is** to build a Q&A agent using small local models. But it can give us similar user experience. 
 
