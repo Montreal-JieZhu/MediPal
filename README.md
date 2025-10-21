@@ -250,7 +250,7 @@ Step 3: Copy and paste **http://127.0.0.1:30001** into browser
 
 [![Watch the Demo](assets/screenshots/MediPal_Full_workflow.PNG)](assets/video/demo.mp4)
 
-
+https://github.com/Montreal-JieZhu/MediPal/blob/main/assets/video/demo.mp4
 ---
 
 ## Citation:
