@@ -16,7 +16,7 @@
 
 2. **Easy examples with big LLM**
 
-   I tried to make an Agentic RAG to solve the problem. When I followed many code examples using big models like OpenAI “gpt-4o”. With a few lines of code, I can get a pretty good user experience. But when I tried the same things with the local LLM like “Meta-Llama-3-8B-Instruct”, it was a totally different story. 
+   I tried to make an Agentic RAG to solve the problem. When I followed many code examples using big models like OpenAI “gpt-4o”. With a few lines of code, I could get a pretty good user experience. But when I tried the same things with the local LLM like “Meta-Llama-3-8B-Instruct”, it was a totally different story. 
 
 3. **Real project limits**
 
@@ -36,7 +36,7 @@ MediPal is designed to have:
 
 2. **Evaluation and Decision Patterns**
 
-   * Instead of solving a problem at once, I decomposed a problem into small yes-or-no questions. 
+   * Instead of solving a problem at one go, I decomposed a problem into a sequence of small yes-or-no questions. 
    * The model can evaluate and decide what to do next. By repeating this process, until solve a problem correctly.
 
 3. **Conversation Memory**
